@@ -1,0 +1,8 @@
+CREATE DATABASE chairoform;
+
+CREATE TABLE form(
+    id int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    name varchar(50),
+    description text,
+    data longtext
+);
