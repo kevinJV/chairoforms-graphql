@@ -18,6 +18,19 @@ const getForm = (id) => {
     })
 }
 
+const getForms = () => {
+    return new Promise((resolve, reject) => {
+        connection.query("SELECT * FROM forms", function (error, result, fields) {
+            if (error) {
+                console.log(error)
+                reject(error)
+            }
+
+            resolve(JSON.parse(JSON.stringify(result)))
+        })
+    })
+}
+
 const addForm = (name, description, data) => {
     return new Promise((resolve, reject) => {
         query = `INSERT INTO forms (name, description, data) VALUES (?, ?, ?)`
@@ -34,4 +47,10 @@ const addForm = (name, description, data) => {
             resolve(data)
         })
     })
+}
+
+module.exports = {
+    getForm,
+    getForms,
+    addForm
 }
