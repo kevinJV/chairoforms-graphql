@@ -3,10 +3,10 @@ const app = express();
 const graphqlHTTP = require('express-graphql')
 const cors = require('cors')
 
-const { buildschema } = require('graphql')
+const { buildSchema } = require('graphql')
 const { getForm, addForm, getForms } = require('./data/form')
 
-var schema = buildschema(`
+var schema = buildSchema(`
     type Form {
         id: Int,
         name: String,
@@ -18,7 +18,7 @@ var schema = buildschema(`
         form(id: Int!): Form
     },
     type Mutation {
-        createForm(name: String!, description: String!, data: String!): Product
+        createForm(name: String!, description: String!, data: String!): Form
     }
 `)
 
