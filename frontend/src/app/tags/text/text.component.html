@@ -1,10 +1,21 @@
-<div class="card">
-    <div class="card-body">
-        <form>
-            <div class="form-group">
-              <label >Questionssssssss</label>
-              <input type="text" class="form-control">
-            </div>
-        </form>
-    </div>
-  </div>
+<mat-accordion>
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Question One
+      </mat-panel-title>
+      <mat-panel-description>
+        What is your name?
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+
+    <mat-form-field>
+      <input matInput placeholder="First name">
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput placeholder="Last name">
+    </mat-form-field>
+  </mat-expansion-panel>
+  
+</mat-accordion>

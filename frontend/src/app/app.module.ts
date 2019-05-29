@@ -12,7 +12,8 @@ import { SelectComponent } from './tags/select/select.component';
 import { CheckboxComponent } from './tags/checkbox/checkbox.component';
 import { RadiobuttonComponent } from './tags/radiobutton/radiobutton.component';
 import { TextComponent } from './tags/text/text.component';
-
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {MatExpansionModule,MatFormFieldModule, MatInputModule, MatSelectModule} from '@angular/material';
 @NgModule({
   declarations: [
     AppComponent,
@@ -25,7 +26,12 @@ import { TextComponent } from './tags/text/text.component';
     BrowserModule,
     AppRoutingModule,
     GraphQLModule,
-    HttpClientModule
+    HttpClientModule,
+    BrowserAnimationsModule,
+    MatExpansionModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule
   ],
   entryComponents: [
 
