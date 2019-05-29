@@ -18,6 +18,7 @@ export class AppComponent implements OnInit {
   title = 'frontend';
 
   forms: any = []
+  questionTypeValue = "text"
   private querySubscription: Subscription;
 
   constructor(
@@ -29,27 +30,40 @@ export class AppComponent implements OnInit {
       {
         provide: 'config',
         useValue: {
-          value: 'Holaaaaa',
-          options : ["a","b"]
+          question: 'Holaaaaa',
+          options: ["a", "b"]
         }
       }
     ]);
+    // {
+    //   data: [
+    //     question1: { type: "check",  label: '1', option: ["a", "b"] },
+    //     question2: { type: "text",  label: '1', option: 'nothing' },
+    //     question3: { type: "radio", label: '1', option: ["a", "b"] },
+    //     question4: { type: "select", label: '1', option: ["a", "b"] }
+    //   ]
+    // }
 
     const factory2 = cfr.resolveComponentFactory(TextComponent);
     const cr2: ComponentRef<TextComponent> = vc.createComponent(factory2, 0, injector);
-    
-    const factory3 = cfr.resolveComponentFactory(SelectComponent);
-    const cr3: ComponentRef<SelectComponent> = vc.createComponent(factory3, 0, injector);
-    
-    const factory4 = cfr.resolveComponentFactory(CheckboxComponent);
-    const cr4: ComponentRef<CheckboxComponent> = vc.createComponent(factory4, 0, injector);
 
-    const factory5 = cfr.resolveComponentFactory(RadiobuttonComponent);
-    const cr5: ComponentRef<RadiobuttonComponent> = vc.createComponent(factory5, 0, injector);
+    // const factory3 = cfr.resolveComponentFactory(SelectComponent);
+    // const cr3: ComponentRef<SelectComponent> = vc.createComponent(factory3, 0, injector);
+
+    // const factory4 = cfr.resolveComponentFactory(CheckboxComponent);
+    // const cr4: ComponentRef<CheckboxComponent> = vc.createComponent(factory4, 0, injector);
+
+    // const factory5 = cfr.resolveComponentFactory(RadiobuttonComponent);
+    // const cr5: ComponentRef<RadiobuttonComponent> = vc.createComponent(factory5, 0, injector);
   }
 
   ngOnInit() {
     this.getforms()
+  }
+
+  SelectQuestionType(type:string) {
+    this.questionTypeValue = type
+    console.log(type)
   }
 
   getforms() {

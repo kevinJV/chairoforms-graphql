@@ -16,7 +16,6 @@ import { TextComponent } from './tags/text/text.component';
 @NgModule({
   declarations: [
     AppComponent,
-
     TextComponent,
     SelectComponent,
     CheckboxComponent,

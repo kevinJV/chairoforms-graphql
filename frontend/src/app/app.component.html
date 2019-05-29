@@ -1,9 +1,79 @@
 <!--The content below is only a placeholder and can be replaced.-->
 <div class="container-fluid">
-    <div class="container-fluid">
-        <h1>Chairo-form</h1>
+    <br>
+    <div class="rounded col-3 bg-light">
+        <label for="basic-url">Tipo de pregunta</label>
+        <div class="input-group mb-3">
+            <select #questionType (change)="SelectQuestionType(questionType.value)" class="form-control">
+                <option value="text">
+                    Texto
+                </option>
+                <option value="checkbox">
+                    Checkbox
+                </option>
+                <option value="radio">
+                    Radio
+                </option>
+                <option value="select">
+                    Select
+                </option>
+            </select>            
+        </div>
+        <div [ngSwitch]="questionTypeValue" class="input-group mb-3">
+            <!-- Texto -->
+            <div *ngSwitchCase="'text'">
+                <label for="basic-url">Titulo de la pregunta</label>
+                <div>
+                    <input type="text" placeholder="Pregunta" class="form-control">
+                </div>
+            </div>
+            <!-- Checkbox -->
+            <div *ngSwitchCase="'checkbox'">
+                <label for="basic-url">Titulo de la pregunta</label>
+                <div>
+                    <input type="text" placeholder="Pregunta" class="form-control">
+                </div>
+                <label for="basic-url">Numero de opciones</label>
+                <div>
+                    <select class="form-control">
+                        <option value="1">
+                            1
+                        </option>
+                        <option value="2">
+                            2
+                        </option>
+                        <option value="3">
+                            3
+                        </option>
+                        <option value="4">
+                            4
+                        </option>
+                    </select>
+                    <div>
+                        <label for="basic-url">Opcion</label>
+                        <input type="text" placeholder="Opcion" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <!-- Radio -->
+            <div *ngSwitchCase="'radio'">
+                <label for="basic-url">Titulo de la pregunta</label>
+                <div>
+                    <input type="text" placeholder="Pregunta" class="form-control">
+                </div>
+            </div>
+            <!-- Select -->
+            <div *ngSwitchCase="'select'">
+                <label for="basic-url">Titulo de la pregunta</label>
+                <div>
+                    <input type="text" placeholder="Pregunta" class="form-control">
+                </div>
+            </div>
+        </div>
+        <button class="btn btn-success">Agregar pregunta</button>
+        <br><br>
     </div>
 </div>
 
 
-<router-outlet></router-outlet> 
+<router-outlet></router-outlet>
