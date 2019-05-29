@@ -8,10 +8,10 @@ const { getForm, addForm, getForms } = require('./data/form')
 
 var schema = buildSchema(`
     type Form {
-        id: Int,
-        name: String,
-        description: String,
         data: String
+        description: String,
+        name: String,
+        id: Int,
     },
     type Query {
         forms: [Form],
@@ -27,6 +27,7 @@ var root = {
         return await getForm(id)
     },
     forms: async () => {
+        console.log(await getForms())
         return await getForms()
     },
     createForms: async args => {
