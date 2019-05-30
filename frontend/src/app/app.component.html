@@ -4,7 +4,7 @@
     <div class="rounded col-3 bg-light">
         <label for="basic-url">Tipo de pregunta</label>
         <div class="input-group mb-3">
-            <select #questionType (change)="SelectQuestionType(questionType.value)" class="form-control">
+            <select #questionType (change)="selectQuestionType(questionType.value)" class="form-control">
                 <option value="text">
                     Texto
                 </option>
@@ -17,61 +17,131 @@
                 <option value="select">
                     Select
                 </option>
-            </select>            
+            </select>
         </div>
         <div [ngSwitch]="questionTypeValue" class="input-group mb-3">
             <!-- Texto -->
             <div *ngSwitchCase="'text'">
                 <label for="basic-url">Titulo de la pregunta</label>
-                <div>
-                    <input type="text" placeholder="Pregunta" class="form-control">
-                </div>
+                <input #textLabel type="text" placeholder="Pregunta" class="form-control">
+
+                <label for="basic-url">Descripcion</label>
+                <input #textDescription type="text" placeholder="Pregunta" class="form-control">
+
+                <br>
+                <button class="btn btn-success"
+                    (click)="addTextQuestion(textLabel.value, textDescription.value)">Agregar pregunta</button>
             </div>
             <!-- Checkbox -->
             <div *ngSwitchCase="'checkbox'">
                 <label for="basic-url">Titulo de la pregunta</label>
-                <div>
-                    <input type="text" placeholder="Pregunta" class="form-control">
-                </div>
-                <label for="basic-url">Numero de opciones</label>
-                <div>
-                    <select class="form-control">
-                        <option value="1">
-                            1
-                        </option>
-                        <option value="2">
-                            2
-                        </option>
-                        <option value="3">
-                            3
-                        </option>
-                        <option value="4">
-                            4
-                        </option>
-                    </select>
-                    <div>
-                        <label for="basic-url">Opcion</label>
-                        <input type="text" placeholder="Opcion" class="form-control">
+                <input #checkLabel type="text" placeholder="Pregunta" class="form-control">
+
+                <label for="basic-url">Descripcion</label>
+                <input #checkDescription type="text" placeholder="Descripcion" class="form-control">
+
+                <!-- <label for="basic-url">Numero de opciones</label>
+
+                <select #checkSize (change)="checkboxSize(checkSize.value)" class="form-control">
+                    <option value=2>
+                        2
+                    </option>
+                    <option value=3>
+                        3
+                    </option>
+                    <option value=4>
+                        4
+                    </option>
+                    <option value=5>
+                        5
+                    </option>
+                </select> -->
+
+                <form [formGroup]="inputForm" (submit)="submit()">
+                    <div formArrayName="inputs">
+                        <div *ngFor="let contact of inputFormGroup.controls; let i = index;">
+                            <div [formGroupName]="i" class="row">
+
+                                <label>Opcion</label>
+                                <input class="form-control" formControlName="option" type="text">
+
+                                <button class="btn btn-danger" type="button" (click)="removeInput(i)"> Eliminar opcion
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                </div>
+                </form>
+                <button class="btn btn-primary m-1" type="button" (click)="addInput()"> Añadir opcion </button>
+
+                <br>
+                <button class="btn btn-success"
+                    (click)="addCheckQuestion(checkLabel.value, checkDescription.value)">Agregar pregunta</button>
+
+                <!-- <label for="basic-url">Opciones</label>
+                <div *ngFor="let i of checkSizeValue">
+                    <input id="{{'check' + i}}" type="text" placeholder="Opcion" class="form-control">
+                </div> -->
             </div>
+
             <!-- Radio -->
             <div *ngSwitchCase="'radio'">
                 <label for="basic-url">Titulo de la pregunta</label>
-                <div>
-                    <input type="text" placeholder="Pregunta" class="form-control">
-                </div>
+                <input #radioLabel type="text" placeholder="Pregunta" class="form-control">
+
+                <label for="basic-url">Descripcion</label>
+                <input #radioDescription type="text" placeholder="Descripcion" class="form-control">
+
+                <form [formGroup]="inputForm" (submit)="submit()">
+                    <div formArrayName="inputs">
+                        <div *ngFor="let contact of inputFormGroup.controls; let i = index;">
+                            <div [formGroupName]="i" class="row">
+
+                                <label>Opcion</label>
+                                <input class="form-control" formControlName="option" type="text">
+
+                                <button class="btn btn-danger" type="button" (click)="removeInput(i)"> Eliminar opcion
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <button class="btn btn-primary m-1" type="button" (click)="addInput()"> Añadir opcion </button>
+
+                <br>
+                <button class="btn btn-success"
+                    (click)="addRadioQuestion(radioLabel.value, radioDescription.value)">Agregar pregunta</button>
             </div>
+
             <!-- Select -->
             <div *ngSwitchCase="'select'">
                 <label for="basic-url">Titulo de la pregunta</label>
-                <div>
-                    <input type="text" placeholder="Pregunta" class="form-control">
-                </div>
+                <input #selectLabel type="text" placeholder="Pregunta" class="form-control">
+
+                <label for="basic-url">Descripcion</label>
+                <input #selectDescription type="text" placeholder="Descripcion" class="form-control">
+
+                <form [formGroup]="inputForm" (submit)="submit()">
+                    <div formArrayName="inputs">
+                        <div *ngFor="let contact of inputFormGroup.controls; let i = index;">
+                            <div [formGroupName]="i" class="row">
+
+                                <label>Opcion</label>
+                                <input class="form-control" formControlName="option" type="text">
+
+                                <button class="btn btn-danger" type="button" (click)="removeInput(i)"> Eliminar opcion
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <button class="btn btn-primary m-1" type="button" (click)="addInput()"> Añadir opcion </button>
+
+                <br>
+                <button class="btn btn-success"
+                    (click)="addSelectQuestion(selectLabel.value, selectDescription.value)">Agregar pregunta</button>
             </div>
         </div>
-        <button class="btn btn-success">Agregar pregunta</button>
-        <br><br>
+        <br>
     </div>
 </div>
 

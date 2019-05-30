@@ -8,6 +8,7 @@ import { SelectComponent } from './tags/select/select.component';
 import { CheckboxComponent } from './tags/checkbox/checkbox.component';
 import { RadiobuttonComponent } from './tags/radiobutton/radiobutton.component';
 
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
@@ -18,13 +19,21 @@ export class AppComponent implements OnInit {
   title = 'frontend';
 
   forms: any = []
+  questions: any = {}
+  inputForm: FormGroup
+  inputList: FormArray
+  public contactList: FormArray;
+
   questionTypeValue = "text"
+  checkSizeValue = [0, 1]
+
   private querySubscription: Subscription;
 
   constructor(
     private apollo: Apollo,
     private cfr: ComponentFactoryResolver,
-    private vc: ViewContainerRef
+    private vc: ViewContainerRef,
+    private fb: FormBuilder
   ) {
     const injector: Injector = ReflectiveInjector.resolveAndCreate([
       {
@@ -44,26 +53,226 @@ export class AppComponent implements OnInit {
     //   ]
     // }
 
-    const factory2 = cfr.resolveComponentFactory(TextComponent);
-    const cr2: ComponentRef<TextComponent> = vc.createComponent(factory2, 0, injector);
-
-    // const factory3 = cfr.resolveComponentFactory(SelectComponent);
-    // const cr3: ComponentRef<SelectComponent> = vc.createComponent(factory3, 0, injector);
-
-    // const factory4 = cfr.resolveComponentFactory(CheckboxComponent);
-    // const cr4: ComponentRef<CheckboxComponent> = vc.createComponent(factory4, 0, injector);
-
-    // const factory5 = cfr.resolveComponentFactory(RadiobuttonComponent);
-    // const cr5: ComponentRef<RadiobuttonComponent> = vc.createComponent(factory5, 0, injector);
   }
 
   ngOnInit() {
     this.getforms()
+    this.renderQuestions()
+
+    this.inputForm = this.fb.group({
+      inputs: this.fb.array([this.createInput()])
+    });
+
+    this.inputList = this.inputForm.get('inputs') as FormArray
   }
 
-  SelectQuestionType(type:string) {
+  renderQuestions() {
+    var questionNumber = Object.keys(this.questions).length;
+    var question = {
+      type: "text",
+      label: "Test Question",
+      option: "null",
+      description: "Testtt"
+    }
+    this.questions[questionNumber] = question
+    console.log(this.questions)
+    for (let val in this.questions) {
+      var type = this.questions[val].type
+      const injector: Injector = ReflectiveInjector.resolveAndCreate([
+        {
+          provide: 'config',
+          useValue: this.questions[val]
+        }
+      ]);
+      switch (type) {
+        case "text": {
+          let cr: ComponentRef<TextComponent> = this.vc.createComponent(this.cfr.resolveComponentFactory(TextComponent), questionNumber, injector);
+          break;
+        }
+        case "checkbox": {
+          let cr: ComponentRef<CheckboxComponent> = this.vc.createComponent(this.cfr.resolveComponentFactory(CheckboxComponent), questionNumber, injector);
+          break;
+        }
+        case "radio": {
+          let cr: ComponentRef<RadiobuttonComponent> = this.vc.createComponent(this.cfr.resolveComponentFactory(RadiobuttonComponent), questionNumber, injector);
+          break;
+        }
+        case "select": {
+          let cr: ComponentRef<SelectComponent> = this.vc.createComponent(this.cfr.resolveComponentFactory(SelectComponent), questionNumber, injector);
+          break;
+        }
+      }
+    }
+  }
+
+
+  selectQuestionType(type: string) {
     this.questionTypeValue = type
-    console.log(type)
+
+    this.inputForm = this.fb.group({
+      inputs: this.fb.array([this.createInput()])
+    });
+
+    this.inputList = this.inputForm.get('inputs') as FormArray
+
+    console.log(this.inputList)
+  }
+
+  addTextQuestion(label, description) {
+    var questionNumber = Object.keys(this.questions).length;
+    var question = {
+      type: "text",
+      label: label,
+      option: "null",
+      description: description
+    }
+    this.questions[questionNumber] = question
+    console.log(this.questions)
+
+    const injector: Injector = ReflectiveInjector.resolveAndCreate([
+      {
+        provide: 'config',
+        useValue: {
+          label: question.label,
+          description: question.description
+        }
+      }
+    ]);
+
+    const factory = this.cfr.resolveComponentFactory(TextComponent);
+    const cr: ComponentRef<TextComponent> = this.vc.createComponent(factory, questionNumber, injector);
+  }
+
+  addCheckQuestion(label: string, description: string) {
+    var option = []
+    var questionNumber = Object.keys(this.questions).length;
+
+    for (let i = 0; i < this.inputList.length; i++) {
+      option.push(this.getInputFormGroup(i).value['option'])
+    }
+    console.log(option)
+
+    var question = {
+      type: "checkbox",
+      label: label,
+      option: option,
+      description: description
+    }
+
+    this.questions[questionNumber] = question
+
+    const injector: Injector = ReflectiveInjector.resolveAndCreate([
+      {
+        provide: 'config',
+        useValue: {
+          label: question.label,
+          description: question.description,
+          option: question.option,
+          number: questionNumber
+        }
+      }
+    ]);
+
+    const factory = this.cfr.resolveComponentFactory(CheckboxComponent);
+    const cr: ComponentRef<CheckboxComponent> = this.vc.createComponent(factory, questionNumber, injector);
+  }
+
+  addRadioQuestion(label: string, description: string) {
+    var option = []
+    var questionNumber = Object.keys(this.questions).length;
+
+    for (let i = 0; i < this.inputList.length; i++) {
+      option.push(this.getInputFormGroup(i).value['option'])
+    }
+    console.log(option)
+
+    var question = {
+      type: "radio",
+      label: label,
+      option: option,
+      description: description
+    }
+
+    this.questions[questionNumber] = question
+
+    const injector: Injector = ReflectiveInjector.resolveAndCreate([
+      {
+        provide: 'config',
+        useValue: {
+          label: question.label,
+          description: question.description,
+          option: question.option,
+          number: questionNumber
+        }
+      }
+    ]);
+
+    const factory = this.cfr.resolveComponentFactory(RadiobuttonComponent);
+    const cr: ComponentRef<RadiobuttonComponent> = this.vc.createComponent(factory, questionNumber, injector);
+  }
+
+  addSelectQuestion(label: string, description: string) {
+    var option = []
+    var questionNumber = Object.keys(this.questions).length;
+
+    for (let i = 0; i < this.inputList.length; i++) {
+      option.push(this.getInputFormGroup(i).value['option'])
+    }
+    console.log(option)
+
+    var question = {
+      type: "radio",
+      label: label,
+      option: option,
+      description: description
+    }
+
+    this.questions[questionNumber] = question
+
+    const injector: Injector = ReflectiveInjector.resolveAndCreate([
+      {
+        provide: 'config',
+        useValue: {
+          label: question.label,
+          description: question.description,
+          option: question.option,
+          number: questionNumber
+        }
+      }
+    ]);
+
+    const factory = this.cfr.resolveComponentFactory(SelectComponent);
+    const cr: ComponentRef<SelectComponent> = this.vc.createComponent(factory, questionNumber, injector);
+  }
+
+  checkboxSize(checkSize) {
+    this.checkSizeValue = Array.from(Array(parseInt(checkSize)).keys())
+    //console.log(this.checkSizeValue)
+  }
+
+  createInput(): FormGroup {
+    return this.fb.group({
+      option: ['', Validators.compose([Validators.required])]
+    });
+  }
+
+  addInput() {
+    //console.log(this.createInput())
+    this.inputList.push(this.createInput())
+  }
+
+  removeInput(index) {
+    this.inputList.removeAt(index)
+  }
+
+  getInputFormGroup(index): FormGroup {
+    this.inputList = this.inputForm.get('inputs') as FormArray;
+    const formGroup = this.inputList.controls[index] as FormGroup;
+    return formGroup;
+  }
+
+  get inputFormGroup() {
+    return this.inputForm.get('inputs') as FormArray;
   }
 
   getforms() {

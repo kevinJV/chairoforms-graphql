@@ -1,5 +1,19 @@
-<select>
-  <option *ngFor='let val of options' [value]="val">
-      {{val}}
-  </option>
-</select>
+<mat-accordion>
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        {{question}}
+      </mat-panel-title>
+      <mat-panel-description>
+        {{description}}
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    
+    <mat-form-field>
+      <mat-select placeholder={{placeholder}}>
+        <mat-option *ngFor="let option of options" value="option">{{option}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </mat-expansion-panel>
+
+</mat-accordion>

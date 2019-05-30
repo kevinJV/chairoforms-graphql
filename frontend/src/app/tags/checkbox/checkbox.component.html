@@ -1,3 +1,15 @@
-<input type="checkbox" name="vehicle1" value="Bike"> I have a bike
-<input type="checkbox" name="vehicle2" value="Car"> I have a car
-<input type="checkbox" name="vehicle3" value="Boat" checked> I have a boat<br>
+<mat-accordion>
+    <mat-expansion-panel>
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                {{question}}
+            </mat-panel-title>
+            <mat-panel-description>
+                {{description}}
+            </mat-panel-description>
+        </mat-expansion-panel-header>
+        <div *ngFor="let option of options">
+            <mat-checkbox>{{option}}</mat-checkbox>
+        </div>
+    </mat-expansion-panel>
+</mat-accordion>
