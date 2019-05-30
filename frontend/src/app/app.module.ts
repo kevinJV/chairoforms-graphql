@@ -13,15 +13,19 @@ import { CheckboxComponent } from './tags/checkbox/checkbox.component';
 import { RadiobuttonComponent } from './tags/radiobutton/radiobutton.component';
 import { TextComponent } from './tags/text/text.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatExpansionModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatCheckboxModule, MatRadioModule, MatRadioGroup } from '@angular/material';
-
+import { MatListModule,MatCardModule,MatExpansionModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatCheckboxModule, MatRadioModule, MatRadioGroup } from '@angular/material';
+import { HomeComponent } from './home/home.component';
+import { SurveyComponent } from './survey/survey.component';
+import { FlexLayoutModule } from '@angular/flex-layout';
 @NgModule({
   declarations: [
     AppComponent,
     TextComponent,
     SelectComponent,
     CheckboxComponent,
-    RadiobuttonComponent
+    RadiobuttonComponent,
+    HomeComponent,
+    SurveyComponent
   ],
   imports: [
     BrowserModule,
@@ -30,12 +34,15 @@ import { MatExpansionModule, MatFormFieldModule, MatInputModule, MatSelectModule
     HttpClientModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
+    FlexLayoutModule,
     MatExpansionModule,
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
     MatCheckboxModule,
     MatRadioModule,
+    MatCardModule,
+    MatListModule,
     FormsModule
   ],
   entryComponents: [
