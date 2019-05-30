@@ -4,5 +4,6 @@ CREATE TABLE forms(
     id int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
     name varchar(50),
     description text,
-    data longtext
+    data longtext,
+    status varchar(25)
 );

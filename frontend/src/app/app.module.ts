@@ -13,7 +13,7 @@ import { CheckboxComponent } from './tags/checkbox/checkbox.component';
 import { RadiobuttonComponent } from './tags/radiobutton/radiobutton.component';
 import { TextComponent } from './tags/text/text.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatListModule,MatCardModule,MatExpansionModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatCheckboxModule, MatRadioModule, MatRadioGroup } from '@angular/material';
+import { MatSidenavModule,MatTabsModule,MatListModule,MatCardModule,MatExpansionModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatCheckboxModule, MatRadioModule, MatRadioGroup } from '@angular/material';
 import { HomeComponent } from './home/home.component';
 import { SurveyComponent } from './survey/survey.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -43,6 +43,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     MatRadioModule,
     MatCardModule,
     MatListModule,
+    MatTabsModule,
+    MatSidenavModule,
     FormsModule
   ],
   entryComponents: [

@@ -1,4 +1,4 @@
-import { ViewContainerRef, Component, Injector, ComponentFactoryResolver, ComponentRef, ReflectiveInjector, OnInit } from '@angular/core';
+import { ViewContainerRef, Component, Injector, ComponentFactoryResolver, ComponentRef, ReflectiveInjector, OnInit, ViewChild } from '@angular/core';
 import { Apollo } from 'apollo-angular';
 import * as Query from '../query'
 import { Subscription } from 'apollo-client/util/Observable';
@@ -15,7 +15,9 @@ import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
   templateUrl: './survey.component.html',
   styleUrls: ['./survey.component.css']
 })
+
 export class SurveyComponent implements OnInit {
+  @ViewChild('questionsDiv', {read: ViewContainerRef}) viewContainer: ViewContainerRef;
   title = 'frontend';
 
   forms: any = []
@@ -86,19 +88,19 @@ export class SurveyComponent implements OnInit {
       ]);
       switch (type) {
         case "text": {
-          let cr: ComponentRef<TextComponent> = this.vc.createComponent(this.cfr.resolveComponentFactory(TextComponent), questionNumber, injector);
+          let cr: ComponentRef<TextComponent> = this.viewContainer.createComponent(this.cfr.resolveComponentFactory(TextComponent), questionNumber, injector);
           break;
         }
         case "checkbox": {
-          let cr: ComponentRef<CheckboxComponent> = this.vc.createComponent(this.cfr.resolveComponentFactory(CheckboxComponent), questionNumber, injector);
+          let cr: ComponentRef<CheckboxComponent> = this.viewContainer.createComponent(this.cfr.resolveComponentFactory(CheckboxComponent), questionNumber, injector);
           break;
         }
         case "radio": {
-          let cr: ComponentRef<RadiobuttonComponent> = this.vc.createComponent(this.cfr.resolveComponentFactory(RadiobuttonComponent), questionNumber, injector);
+          let cr: ComponentRef<RadiobuttonComponent> = this.viewContainer.createComponent(this.cfr.resolveComponentFactory(RadiobuttonComponent), questionNumber, injector);
           break;
         }
         case "select": {
-          let cr: ComponentRef<SelectComponent> = this.vc.createComponent(this.cfr.resolveComponentFactory(SelectComponent), questionNumber, injector);
+          let cr: ComponentRef<SelectComponent> = this.viewContainer.createComponent(this.cfr.resolveComponentFactory(SelectComponent), questionNumber, injector);
           break;
         }
       }
@@ -139,8 +141,8 @@ export class SurveyComponent implements OnInit {
       }
     ]);
 
-    const factory = this.cfr.resolveComponentFactory(TextComponent);
-    const cr: ComponentRef<TextComponent> = this.vc.createComponent(factory, questionNumber, injector);
+    const factory = this.cfr.resolveComponentFactory(TextComponent);  
+    const cr: ComponentRef<TextComponent> = this.viewContainer.createComponent(factory, questionNumber, injector);
   }
 
   addCheckQuestion(label: string, description: string) {
@@ -174,7 +176,7 @@ export class SurveyComponent implements OnInit {
     ]);
 
     const factory = this.cfr.resolveComponentFactory(CheckboxComponent);
-    const cr: ComponentRef<CheckboxComponent> = this.vc.createComponent(factory, questionNumber, injector);
+    const cr: ComponentRef<CheckboxComponent> = this.viewContainer.createComponent(factory, questionNumber, injector);
   }
 
   addRadioQuestion(label: string, description: string) {
@@ -208,7 +210,7 @@ export class SurveyComponent implements OnInit {
     ]);
 
     const factory = this.cfr.resolveComponentFactory(RadiobuttonComponent);
-    const cr: ComponentRef<RadiobuttonComponent> = this.vc.createComponent(factory, questionNumber, injector);
+    const cr: ComponentRef<RadiobuttonComponent> = this.viewContainer.createComponent(factory, questionNumber, injector);
   }
 
   addSelectQuestion(label: string, description: string) {
@@ -242,7 +244,7 @@ export class SurveyComponent implements OnInit {
     ]);
 
     const factory = this.cfr.resolveComponentFactory(SelectComponent);
-    const cr: ComponentRef<SelectComponent> = this.vc.createComponent(factory, questionNumber, injector);
+    const cr: ComponentRef<SelectComponent> =this.viewContainer.createComponent(factory, questionNumber, injector);
   }
 
   checkboxSize(checkSize) {
