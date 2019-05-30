@@ -4,35 +4,44 @@ const graphqlHTTP = require('express-graphql')
 const cors = require('cors')
 
 const { buildSchema } = require('graphql')
-const { getForm, addForm, getForms } = require('./data/form')
+const { getSurvey, addSurvey, getSurveys,deleteSurvey,editSurvey } = require('./data/survey')
 
 var schema = buildSchema(`
-    type Form {
+    type Survey {
         data: String
         description: String,
         name: String,
         id: Int,
     },
     type Query {
-        forms: [Form],
-        form(id: Int!): Form
+        surveys: [Survey],
+        survey(id: Int!): Survey
     },
     type Mutation {
-        createForm(name: String!, description: String!, data: String!): Form
+        createSurvey(name: String!, description: String!, data: String!): Survey,
+        removeSurvey(id: Int!): [Survey],
+        editSurvey(id: Int!,name: String!,description: String!,data: String!): Survey
     }
 `)
 
 var root = {
-    form: async ({ id }) => {
-        return await getForm(id)
+    survey: async ({ id }) => {
+        return await getSurvey(id)
     },
-    forms: async () => {
-        console.log(await getForms())
-        return await getForms()
+    surveys: async () => {
+        console.log(await getSurveys())
+        return await getSurveys()
     },
-    createForms: async args => {
+    createSurvey: async args => {
         const { name, description, data } = args
-        return await createForms(name, description, data)
+        return await addSurvey(name, description, data)
+    },
+    removeSurvey: ({id}) => {
+        return deleteSurvey(id);
+    },
+    editSurvey: args => {
+        const {  id ,name , description,data} = args;
+        return editSurvey( id , name, description,data);
     }
 }
 

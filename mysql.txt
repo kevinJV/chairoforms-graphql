@@ -1,6 +1,6 @@
 CREATE DATABASE chairoform;
 
-CREATE TABLE forms(
+CREATE TABLE surveys(
     id int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
     name varchar(50),
     description text,

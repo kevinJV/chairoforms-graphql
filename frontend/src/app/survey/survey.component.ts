@@ -20,7 +20,7 @@ export class SurveyComponent implements OnInit {
   @ViewChild('questionsDiv', {read: ViewContainerRef}) viewContainer: ViewContainerRef;
   title = 'frontend';
 
-  forms: any = []
+  surveys: any = []
   questions: any = {}
   inputForm: FormGroup
   inputList: FormArray
@@ -58,7 +58,7 @@ export class SurveyComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getforms()
+    this.getSurveys()
     this.renderQuestions()
 
     this.inputForm = this.fb.group({
@@ -277,13 +277,13 @@ export class SurveyComponent implements OnInit {
     return this.inputForm.get('inputs') as FormArray;
   }
 
-  getforms() {
+  getSurveys() {
     this.querySubscription = this.apollo.watchQuery<any>({
-      query: Query.forms
+      query: Query.Surveys
     }).valueChanges.subscribe(({ data, loading }) => {
 
-      this.forms = data['forms']
-      console.log(this.forms)
+      this.surveys = data['surveys']
+      console.log(this.surveys)
     })
   }
 

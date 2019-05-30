@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 
-export const createForm = gql`
-    mutation createForm($name: String!, $description: String!, $data: String!){
-        createForm(name: $name, description: $description, data: $data){
+export const createSurvey = gql`
+    mutation createSurvey($name: String!, $description: String!, $data: String!){
+        createSurvey(name: $name, description: $description, data: $data){
             name,
             description,
             data
@@ -10,9 +10,30 @@ export const createForm = gql`
     }
 `;
 
-export const forms = gql`
+
+export const removeSurvey = gql`
+    mutation removeSurvey($id: Int!){
+        removeSurvey(id: $id){
+            id,
+            name,
+            description
+        }
+}`;
+
+export const editSurvey = gql`
+    mutation editSurvey($id: Int!,$name:String!,$description:String!, $data: String!){
+        editSurvey(id: $id,name:$name, description:$description, data: $data){
+            id,
+            name,
+            description,
+            data
+        }
+}`;
+
+
+export const Surveys = gql`
     query{
-        forms{
+        surveys{
             id,
             name,
             description,
