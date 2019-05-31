@@ -1,6 +1,7 @@
 <mat-accordion>
   <mat-expansion-panel>
     <mat-expansion-panel-header>
+      <button  *ngIf="status == 'draft'"  class="btn btn-danger" (click)="removeObject()">Eliminar</button>
       <mat-panel-title>
         {{question}}
       </mat-panel-title>

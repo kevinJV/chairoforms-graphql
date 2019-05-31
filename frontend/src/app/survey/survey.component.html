@@ -1,121 +1,127 @@
-<mat-sidenav-container class="example-container" >
-    <mat-sidenav class="sidenav" opened mode="side"  >
-        <div>
-                <mat-label>Tipo</mat-label>
-                <mat-select #questionType (selectionChange)="selectQuestionType(questionType.value)" placeholder="Seleccionar">
-                    <mat-option value="text">Texto</mat-option>
-                    <mat-option value="checkbox">CheckBox</mat-option>
-                    <mat-option value="radio">Radio</mat-option>
-                    <mat-option value="select">Select</mat-option>
-                </mat-select>   
+<mat-sidenav-container class="example-container">
+    <mat-sidenav class="sidenav" opened mode="side">
+        <div *ngIf="status == 'draft'">
+            <mat-label>Tipo</mat-label>
+            <mat-select #questionType (selectionChange)="selectQuestionType(questionType.value)"
+                placeholder="Seleccionar" value="text">
+                <mat-option value="text">Texto</mat-option>
+                <mat-option value="checkbox">CheckBox</mat-option>
+                <mat-option value="radio">Radio</mat-option>
+                <mat-option value="select">Select</mat-option>
+            </mat-select>
 
-            <div [ngSwitch]="questionTypeValue" >
+            <div [ngSwitch]="questionTypeValue">
                 <!-- Texto -->
                 <div *ngSwitchCase="'text'">
                     <mat-label>Titulo de la pregunta</mat-label>
-                    <input #textLabel type="text" placeholder="Pregunta" class="form-control">
-      
+                    <input #textLabel [(ngModel)]="label" type="text" placeholder="Pregunta" class="form-control">
+
                     <mat-label>Descripcion</mat-label>
-                    <input #textDescription type="text" placeholder="Pregunta" class="form-control">
-      
+                    <input #textDescription  [(ngModel)]="description" type="text" placeholder="Pregunta" class="form-control">
+
                     <br>
-                    <button class="btn btn-success"
-                        (click)="addTextQuestion(textLabel.value, textDescription.value)">Agregar pregunta</button>
+                    <button class="btn btn-success" (click)="addTextQuestion(textLabel.value, textDescription.value)"
+                    [disabled]="!description || !label">Agregar pregunta</button>
                 </div>
                 <!-- Checkbox -->
                 <div *ngSwitchCase="'checkbox'">
                     <mat-label>Titulo de la pregunta</mat-label>
-                    <input #checkLabel type="text" placeholder="Pregunta" class="form-control">
-      
+                    <input #checkLabel [(ngModel)]="label1" type="text" placeholder="Pregunta" class="form-control">
+
                     <mat-label>Descripcion</mat-label>
-                    <input #checkDescription type="text" placeholder="Descripcion" class="form-control">
-           
+                    <input #checkDescription [(ngModel)]="description1" type="text" placeholder="Descripcion" class="form-control">
+
                     <form [formGroup]="inputForm" (submit)="submit()">
                         <div formArrayName="inputs">
                             <div *ngFor="let contact of inputFormGroup.controls; let i = index;">
                                 <div [formGroupName]="i" class="column">
                                     <mat-label>Opción</mat-label>
-                                    <div>                        
+                                    <div>
                                         <input fxFlex="none" formControlName="option" type="text">
-                                        <button  mat-button fxFlex="none" class="btn btn-danger" type="button" (click)="removeInput(i)"> Eliminar opcion</button>
+                                        <button mat-button fxFlex="none" class="btn btn-danger" type="button"
+                                            (click)="removeInput(i)"> Eliminar opcion</button>
                                     </div>
-                                   
+
                                 </div>
                             </div>
                         </div>
                     </form>
-                    <button class="btn btn-primary m-1" type="button" (click)="addInput()"> Añadir opcion </button>   
-                    <button class="btn btn-success"
-                        (click)="addCheckQuestion(checkLabel.value, checkDescription.value)">Agregar pregunta</button>
-                    
-      
+                    <button class="btn btn-primary m-1" type="button" (click)="addInput()"> Añadir opcion </button>
+                    <button class="btn btn-success" (click)="addCheckQuestion(checkLabel.value, checkDescription.value)"
+                        [disabled]="inputForm.invalid || !description1 || !label1"> Agregar pregunta</button>
+
+
                 </div>
-      
+
                 <!-- Radio -->
                 <div *ngSwitchCase="'radio'">
                     <mat-label>Titulo de la pregunta</mat-label>
-                    <input #radioLabel type="text" placeholder="Pregunta" class="form-control">
-      
+                    <input #radioLabel [(ngModel)]="label2" type="text" placeholder="Pregunta" class="form-control">
+
 
                     <mat-label>Descripcion</mat-label>
-                    <input #radioDescription type="text" placeholder="Descripcion" class="form-control">
-      
+                    <input #radioDescription [(ngModel)]="description2" type="text" placeholder="Descripcion" class="form-control">
+
                     <form [formGroup]="inputForm" (submit)="submit()">
-                            <div formArrayName="inputs">
-                                <div *ngFor="let contact of inputFormGroup.controls; let i = index;">
-                                    <div [formGroupName]="i" class="column">
-                                        <mat-label>Opción</mat-label>
-                                        <div>                        
-                                            <input fxFlex="none" formControlName="option" type="text">
-                                            <button  mat-button fxFlex="none" class="btn btn-danger" type="button" (click)="removeInput(i)"> Eliminar opcion</button>
-                                        </div>
-                                       
+                        <div formArrayName="inputs">
+                            <div *ngFor="let contact of inputFormGroup.controls; let i = index;">
+                                <div [formGroupName]="i" class="column">
+                                    <mat-label>Opción</mat-label>
+                                    <div>
+                                        <input fxFlex="none" formControlName="option" type="text">
+                                        <button mat-button fxFlex="none" class="btn btn-danger" type="button"
+                                            (click)="removeInput(i)"> Eliminar opcion</button>
                                     </div>
+
                                 </div>
                             </div>
+                        </div>
                     </form>
-                    <button class="btn btn-primary m-1" type="button" (click)="addInput()"> Añadir opcion </button>   
-                    <button class="btn btn-success"
-                        (click)="addRadioQuestion(radioLabel.value, radioDescription.value)">Agregar pregunta</button>
+                    <button class="btn btn-primary m-1" type="button" (click)="addInput()"> Añadir opcion </button>
+                    <button class="btn btn-success" (click)="addRadioQuestion(radioLabel.value, radioDescription.value)"
+                        [disabled]="inputForm.invalid || !description2 || !label2 ">Agregar pregunta</button>
                 </div>
-                
-      
+
+
                 <!-- Select -->
                 <div *ngSwitchCase="'select'">
                     <label for="basic-url">Titulo de la pregunta</label>
-                    <input #selectLabel type="text" placeholder="Pregunta" class="form-control">
-      
+                    <input #selectLabel [(ngModel)]="label3" type="text" placeholder="Pregunta" class="form-control">
+
                     <label for="basic-url">Descripcion</label>
-                    <input #selectDescription type="text" placeholder="Descripcion" class="form-control">
-      
+                    <input #selectDescription [(ngModel)]="description3" type="text" placeholder="Descripcion" class="form-control">
+
                     <form [formGroup]="inputForm" (submit)="submit()">
-                            <div formArrayName="inputs">
-                                <div *ngFor="let contact of inputFormGroup.controls; let i = index;">
-                                    <div [formGroupName]="i" class="column">
-                                        <mat-label>Opción</mat-label>
-                                        <div>                        
-                                            <input fxFlex="none" formControlName="option" type="text">
-                                            <button  mat-button fxFlex="none" class="btn btn-danger" type="button" (click)="removeInput(i)"> Eliminar opcion</button>
-                                        </div>
-                                       
+                        <div formArrayName="inputs">
+                            <div *ngFor="let contact of inputFormGroup.controls; let i = index;">
+                                <div [formGroupName]="i" class="column">
+                                    <mat-label>Opción</mat-label>
+                                    <div>
+                                        <input fxFlex="none" formControlName="option" type="text">
+                                        <button mat-button fxFlex="none" class="btn btn-danger" type="button"
+                                            (click)="removeInput(i)"> Eliminar opcion</button>
                                     </div>
+
                                 </div>
                             </div>
+                        </div>
                     </form>
-                    <button class="btn btn-primary m-1" type="button" (click)="addInput()"> Añadir opcion </button>   
+                    <button class="btn btn-primary m-1" type="button" (click)="addInput()"> Añadir opcion </button>
                     <button class="btn btn-success"
-                        (click)="addSelectQuestion(selectLabel.value, selectDescription.value)">Agregar pregunta</button>
+                        (click)="addSelectQuestion(selectLabel.value, selectDescription.value)"
+                        [disabled]="inputForm.invalid || !description3 || !label3">Agregar
+                        pregunta</button>
                 </div>
             </div>
             <br>
-            <button class="btn btn-secondary m-1" type="button" (click)=editSurvey()> Guardar </button>   
-            <button class="btn btn-secondary m-1" type="button" (click)=editStatusSurvey()> Finalizar Encuesta </button>   
+            <button class="btn btn-secondary m-1" type="button" (click)=editSurvey()> Guardar </button>
+            <button class="btn btn-secondary m-1" type="button" (click)=editStatusSurvey()> Finalizar Encuesta </button>
         </div>
-        
+
+
     </mat-sidenav>
     <mat-sidenav opened mode="side" position="end"></mat-sidenav>
-    <div #questionsDiv >
+    <div (close)=onEvent($event) #questionsDiv>
         Questions
     </div>
 </mat-sidenav-container>
-
