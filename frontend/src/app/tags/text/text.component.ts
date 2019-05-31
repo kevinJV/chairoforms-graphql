@@ -1,4 +1,4 @@
-import { Component, Input, Inject} from '@angular/core';
+import { Component, Input, Inject, OnInit, ViewChild, ComponentFactoryResolver, OnDestroy, ComponentRef } from '@angular/core';
 
 @Component({
   selector: 'app-text',
@@ -6,16 +6,20 @@ import { Component, Input, Inject} from '@angular/core';
   styleUrls: ['./text.component.css']
 })
 export class TextComponent {
-  public config: any;  
+
+  public config: any;
   question = "question"
   description = "description"
-  placeholder = "answer"
-  constructor(@Inject('config') config) {
+  placeholder = "respuesta"
+  constructor(@Inject('config') config, private componentFactoryResolver: ComponentFactoryResolver) {
     this.config = config;
     console.log(this.config.value)
-    console.log(this.config.numOptions)    
+    console.log(this.config.numOptions)
     this.question = this.config.label
     this.description = this.config.description
   }
+
+
+
   @Input() name: string;
 }

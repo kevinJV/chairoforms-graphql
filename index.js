@@ -4,28 +4,31 @@ const graphqlHTTP = require('express-graphql')
 const cors = require('cors')
 
 const { buildSchema } = require('graphql')
-const { getSurvey, addSurvey, getSurveys,deleteSurvey,editSurvey } = require('./data/survey')
+const { getSurvey, addSurvey, getSurveys, deleteSurvey, updateSurvey } = require('./data/survey')
 
 var schema = buildSchema(`
     type Survey {
-        data: String
+        status: String,
+        data: String,
         description: String,
         name: String,
-        id: Int,
+        id: Int
     },
     type Query {
         surveys: [Survey],
         survey(id: Int!): Survey
     },
     type Mutation {
-        createSurvey(name: String!, description: String!, data: String!): Survey,
+        createSurvey(name: String!, description: String!, data: String!, status: String!): Survey,
         removeSurvey(id: Int!): [Survey],
-        editSurvey(id: Int!,name: String!,description: String!,data: String!): Survey
+        editSurvey(id: Int!, name: String!, description: String!, data: String!, status: String!): Survey
     }
 `)
 
 var root = {
     survey: async ({ id }) => {
+        console.log("Entre solo a survey")
+        console.log( await getSurvey(id))
         return await getSurvey(id)
     },
     surveys: async () => {
@@ -33,15 +36,16 @@ var root = {
         return await getSurveys()
     },
     createSurvey: async args => {
-        const { name, description, data } = args
-        return await addSurvey(name, description, data)
+        const { name, description, data, status } = args
+        return await addSurvey(name, description, data, status)
     },
-    removeSurvey: ({id}) => {
-        return deleteSurvey(id);
+    removeSurvey: async ({ id }) => {
+        return await deleteSurvey(id);
     },
-    editSurvey: args => {
-        const {  id ,name , description,data} = args;
-        return editSurvey( id , name, description,data);
+    editSurvey: async args => {
+        console.log("Estoy adentro del edit, cambio")
+        const { id, name, description, data, status } = args;
+        return await updateSurvey(id, name, description, data, status);
     }
 }
 

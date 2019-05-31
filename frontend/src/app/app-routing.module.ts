@@ -9,7 +9,7 @@ const routes: Routes = [
     component: HomeComponent, 
   },
   { 
-    path: 'survey', 
+    path: 'survey/:id', 
     component: SurveyComponent,
   },
   // otherwise redirect to home

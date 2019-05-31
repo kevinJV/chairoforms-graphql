@@ -1,6 +1,6 @@
 import { ViewContainerRef, Component, Injector, ComponentFactoryResolver, ComponentRef, ReflectiveInjector, OnInit, ViewChild } from '@angular/core';
 import { Apollo } from 'apollo-angular';
-import * as Query from '../query'
+import * as Query from '../query';
 import { Subscription } from 'apollo-client/util/Observable';
 
 import { TextComponent } from '../tags/text/text.component';
@@ -9,7 +9,7 @@ import { CheckboxComponent } from '../tags/checkbox/checkbox.component';
 import { RadiobuttonComponent } from '../tags/radiobutton/radiobutton.component';
 
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-
+import { Router, ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-survey',
   templateUrl: './survey.component.html',
@@ -17,67 +17,70 @@ import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 
 export class SurveyComponent implements OnInit {
-  @ViewChild('questionsDiv', {read: ViewContainerRef}) viewContainer: ViewContainerRef;
+  @ViewChild('questionsDiv', { read: ViewContainerRef }) viewContainer: ViewContainerRef;
   title = 'frontend';
 
-  surveys: any = []
+  survey: any
   questions: any = {}
   inputForm: FormGroup
   inputList: FormArray
   public contactList: FormArray;
-
+  //checkSizeValue = [0, 1]
   questionTypeValue = "text"
-  checkSizeValue = [0, 1]
+  private querySubscription: Subscription;  
 
-  private querySubscription: Subscription;
 
   constructor(
     private apollo: Apollo,
     private cfr: ComponentFactoryResolver,
     private vc: ViewContainerRef,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private _Activatedroute: ActivatedRoute,
+    private _router: Router
   ) {
-    const injector: Injector = ReflectiveInjector.resolveAndCreate([
-      {
-        provide: 'config',
-        useValue: {
-          question: 'Holaaaaa',
-          options: ["a", "b"]
-        }
-      }
-    ]);
-    // {
-    //   data: [
-    //     question1: { type: "check",  label: '1', option: ["a", "b"] },
-    //     question2: { type: "text",  label: '1', option: 'nothing' },
-    //     question3: { type: "radio", label: '1', option: ["a", "b"] },
-    //     question4: { type: "select", label: '1', option: ["a", "b"] }
-    //   ]
-    // }
+    let id;
+    this._Activatedroute.paramMap.subscribe(params => {
+      id = params['params'].id
+    });
+
+    this.getSurvey(id).then(response => {
+      this.survey = response
+      this.questions = JSON.parse(this.survey.data)
+      this.renderQuestions()
+      this.inputForm = this.fb.group({
+        inputs: this.fb.array([this.createInput()])
+      });
+
+      this.inputList = this.inputForm.get('inputs') as FormArray
+    })
 
   }
 
+
   ngOnInit() {
-    this.getSurveys()
-    this.renderQuestions()
 
-    this.inputForm = this.fb.group({
-      inputs: this.fb.array([this.createInput()])
-    });
+  }
 
-    this.inputList = this.inputForm.get('inputs') as FormArray
+  getSurvey(id) {
+    return new Promise((resolve, reject) => {
+      console.log(id)
+      this.apollo.watchQuery({
+        query: Query.Survey,
+        variables: {
+          id: parseInt(id),
+        },
+      }).valueChanges.subscribe(response => {
+        console.log(response);
+        console.log(response.data['survey'])
+        resolve(response.data['survey'])
+      });
+    })
+
   }
 
   renderQuestions() {
     var questionNumber = Object.keys(this.questions).length;
-    var question = {
-      type: "text",
-      label: "Test Question",
-      option: "null",
-      description: "Testtt"
-    }
-    this.questions[questionNumber] = question
-    console.log(this.questions)
+
     for (let val in this.questions) {
       var type = this.questions[val].type
       const injector: Injector = ReflectiveInjector.resolveAndCreate([
@@ -141,7 +144,7 @@ export class SurveyComponent implements OnInit {
       }
     ]);
 
-    const factory = this.cfr.resolveComponentFactory(TextComponent);  
+    const factory = this.cfr.resolveComponentFactory(TextComponent);
     const cr: ComponentRef<TextComponent> = this.viewContainer.createComponent(factory, questionNumber, injector);
   }
 
@@ -244,13 +247,13 @@ export class SurveyComponent implements OnInit {
     ]);
 
     const factory = this.cfr.resolveComponentFactory(SelectComponent);
-    const cr: ComponentRef<SelectComponent> =this.viewContainer.createComponent(factory, questionNumber, injector);
+    const cr: ComponentRef<SelectComponent> = this.viewContainer.createComponent(factory, questionNumber, injector);
   }
 
-  checkboxSize(checkSize) {
-    this.checkSizeValue = Array.from(Array(parseInt(checkSize)).keys())
-    //console.log(this.checkSizeValue)
-  }
+  // checkboxSize(checkSize) {
+  //   this.checkSizeValue = Array.from(Array(parseInt(checkSize)).keys())
+  //   //console.log(this.checkSizeValue)
+  // }
 
   createInput(): FormGroup {
     return this.fb.group({
@@ -277,14 +280,41 @@ export class SurveyComponent implements OnInit {
     return this.inputForm.get('inputs') as FormArray;
   }
 
-  getSurveys() {
-    this.querySubscription = this.apollo.watchQuery<any>({
-      query: Query.Surveys
-    }).valueChanges.subscribe(({ data, loading }) => {
+  editSurvey() {
+    console.log(this.survey)
+    //this.loading_edit = true;
+    this.apollo.mutate({
+      mutation: Query.editSurvey,
+      variables: {
+        id: parseInt(this.survey.id),
+        name: this.survey.name,
+        description: this.survey.description,
+        data: JSON.stringify(this.questions),
+        status: this.survey.status
+      },
+    }).subscribe(({ data }) => {
+      //this.loading_edit = false;
+      console.log(data);
+    }), (error) => {
+      console.log('error', error)
+    }
+  }
 
-      this.surveys = data['surveys']
-      console.log(this.surveys)
-    })
+  editStatusSurvey(survey) {
+    this.apollo.mutate({
+      mutation: Query.editSurvey,
+      variables: {
+        id: parseInt(this.survey.id),
+        name: this.survey.name,
+        description: this.survey.description,
+        data: this.survey.data,
+        status: "finalized"
+      },
+    }).subscribe(({ data }) => {
+      console.log(data);
+    }), (error) => {
+      console.log('error', error)
+    }
   }
 
 }

@@ -13,7 +13,7 @@ const getSurvey = (id) => {
                 reject(error)
             }
 
-            resolve(JSON.parse(JSON.stringify(result[0])))
+            resolve(result[0])  
         })
     })
 }
@@ -26,16 +26,16 @@ const getSurveys = () => {
                 reject(error)
             }
 
-            resolve(JSON.parse(JSON.stringify(result)))
+            resolve(result)
         })
     })
 }
 
-const addSurvey = (name, description, data) => {
+const addSurvey = (name, description, data, status) => {
     return new Promise((resolve, reject) => {
-        query = `INSERT INTO surveys (name, description, data) VALUES (?, ?, ?)`
+        query = `INSERT INTO surveys (name, description, data, status) VALUES (?, ?, ?, ?)`
 
-        connection.query(query, [name, description, data], async function (error, result, fields) {
+        connection.query(query, [name, description, data, status], async function (error, result, fields) {
             if (error) {
                 console.log(error)
                 reject(error)
@@ -50,31 +50,32 @@ const addSurvey = (name, description, data) => {
 }
 
 const deleteSurvey = (id) => {
-    return new Promise(function(resolve, reject) {
+    return new Promise(function (resolve, reject) {
         // The Promise constructor should catch any errors thrown on
         // this tick. Alternately, try/catch and reject(err) on catch.
         query_var = [id]
-        connection.query("DELETE from surveys where id = ?",query_var, function (err, rows, fields) {
+        connection.query("DELETE from surveys where id = ?", query_var, function (err, rows, fields) {
             if (err) {
                 return reject(err);
             }
             //resolve(rows);
             resolve(getSurveys());
-        }); 
+        });
     });
 };
 
-const editSurvey = (id,name, description,data) => {
-    return new Promise(function(resolve, reject) {
+const updateSurvey = (id, name, description, data, status) => {
+    console.log("hola soy indigo montoya, y estas en d")
+    return new Promise(function (resolve, reject) {
         // The Promise constructor should catch any errors thrown on
         // this tick. Alternately, try/catch and reject(err) on catch.
-        query_var = [name,description,data,id]
-        connection.query("UPDATE surveys SET name = ? , description = ? , data = ? WHERE id = ?",query_var, function (err, rows, fields) {
+        query_var = [name, description, data, status, id]
+        connection.query("UPDATE surveys SET name = ? , description = ? , data = ? , status = ? WHERE id = ?", query_var, function (err, rows, fields) {
             if (err) {
                 return reject(err);
             }
-            resolve(getProduct(id));
-        }); 
+            resolve(getSurveys(id));
+        });
     });
 };
 
@@ -85,5 +86,5 @@ module.exports = {
     getSurveys,
     addSurvey,
     deleteSurvey,
-    editSurvey
+    updateSurvey
 }

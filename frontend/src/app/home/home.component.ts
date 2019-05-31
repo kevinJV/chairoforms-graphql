@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import {Apollo} from 'apollo-angular';
+import { Apollo } from 'apollo-angular';
 import * as Query from '../query';
-import { FormBuilder, FormGroup , Validators} from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -9,80 +10,87 @@ import { FormBuilder, FormGroup , Validators} from '@angular/forms';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-  surveys:any=[]
+  surveys: any = []
   surveyForm: FormGroup;
   loading = false;
   update = false;
   item_id = 0
 
 
-  constructor(private formBuilder: FormBuilder,
-    private apollo:Apollo){
-      this.surveyForm = this.formBuilder.group({
-        name: ['', Validators.required],
-        description: ['', Validators.required]
-      });
+  constructor(
+    private formBuilder: FormBuilder,
+    private apollo: Apollo,
+    private router: Router
+  ) {
+    this.surveyForm = this.formBuilder.group({
+      name: ['', Validators.required],
+      description: ['', Validators.required]
+    });
     this.getSurveys();
   }
 
   ngOnInit() {
   }
 
-  getSurveys(){
-    this.apollo.watchQuery({query:Query.Surveys}).valueChanges.subscribe(response=>{
+  getSurveys() {
+    this.apollo.watchQuery({ query: Query.Surveys }).valueChanges.subscribe(response => {
       console.log(response);
-      this.surveys=response.data['surveys'];
+      this.surveys = response.data['surveys'];
     });
   }
 
-  createSurveys(){
+  createSurvey() {
     this.loading = true;
     this.apollo.mutate({
       mutation: Query.createSurvey,
       variables: {
-         name: this.surveyForm.get('name').value,
-         description: this.surveyForm.get('description').value
+        name: this.surveyForm.get('name').value,
+        description: this.surveyForm.get('description').value,
+        data: "{}",
+        status: "draft"
       },
-      update: (proxy, {data : {createProduct}}) =>{
-        const data: any = proxy.readQuery({query:Query.Surveys});
+      update: (proxy, { data: { createSurvey } }) => {
+        const data: any = proxy.readQuery({ query: Query.Surveys });
 
-        console.log(data,createProduct);
-        this.surveys.push(createProduct);
+        //console.log(data, createSurvey);
+        this.surveys.push(createSurvey);
 
-        proxy.writeQuery({query:Query.Surveys,data});
+        console.log("Arriba de data")
+        console.log(data)
+        proxy.writeQuery({ query: Query.Surveys, data });
       }
-    }).subscribe(({data})=>{
-       this.loading = false;
-       console.log(data);
-    }),(error) =>{
-      console.log('error',error)
+    }).subscribe(({ data }) => {
+      this.loading = false;
+      console.log(data);
+    }), (error) => {
+      console.log('error', error)
     }
   }
 
-  editSurvey(){
 
-  }
 
-  removeSurvey(id){
+
+  removeSurvey(id) {
+    console.log(id)
     this.apollo.mutate({
       mutation: Query.removeSurvey,
       variables: {
-         id: id,
+        id: id,
       },
-      update: (proxy, {data : {removeProduct}}) =>{
+      update: (proxy, { data: { removeSurvey } }) => {
 
-        const data:any= proxy.readQuery({query:Query.Surveys});
+        const data: any = proxy.readQuery({ query: Query.Surveys });
 
-        const product = this.surveys.find( p => p.id === id);
-        const index = this.surveys.indexOf(product, 0);
-        this.surveys.splice(index,1);
+        const survey = this.surveys.find(p => p.id === id);
+        const index = this.surveys.indexOf(survey, 0);
+        this.surveys.splice(index, 1);
 
-        proxy.writeQuery({query:Query.Surveys,data});
+        proxy.writeQuery({ query: Query.Surveys, data });
       }
-    }).subscribe(({data})=>{
-       console.log(data);
-    }),(error) =>{
-      console.log('error',error)
+    }).subscribe(({ data }) => {
+      console.log(data);
+    }), (error) => {
+      console.log('error', error)
     }
   }
 
