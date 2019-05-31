@@ -221,7 +221,7 @@ export class AppComponent implements OnInit {
     console.log(option)
 
     var question = {
-      type: "radio",
+      type: "select",
       label: label,
       option: option,
       description: description
